@@ -2,14 +2,62 @@
   "name": "agent-gpt",
   "version": "0.1.0",
   "private": true,
+  "watch": {
+    "build_win": {
+      "patterns": [
+        "src",
+        ".",
+        "styles/**",
+        "pages/**",
+        "public/**"
+      ],
+      "ignore": [
+        "out",
+        "node_modules",
+        ".next"
+      ],
+      "extensions": [
+        "js",
+        "json",
+        "lock",
+        "tsx",
+        "ts"
+      ]
+    },
+    "build_mac": {
+      "patterns": [
+        "src",
+        ".",
+        "styles/**",
+        "pages/**",
+        "public/**"
+      ],
+      "ignore": [
+        "out",
+        "node_modules",
+        ".next"
+      ],
+      "extensions": [
+        "js",
+        "json",
+        "lock",
+        "tsx",
+        "ts"
+      ]
+    }
+  },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "build_win": "next build && next export && npm run prepare:win",
+    "build_mac": "next build && next export && npm run prepare:mac",
+    "prepare:win": "mv ./out/_next out/assets && sed -i 's/\\/_next/\\/assets/g' ./out/**.html",
+    "prepare:mac": "mv ./out/_next out/assets && sed -i '' 's/\\/_next/\\/assets/g' ./out/*.html",
+    "watch:mac": "npm-watch build_mac",
+    "watch:win": "npm-watch build_win"
   },
   "dependencies": {
     "autoprefixer": "10.4.14",
+    "cheerio": "^1.0.0-rc.12",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.7",
     "langchain": "^0.0.102",
@@ -18,7 +66,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-markdown": "^8.0.7",
-    "styled-components": "^6.0.1",
+    "styled-components": "^6.0.2",
     "tailwindcss": "3.3.2"
   }
 }
