@@ -9,7 +9,7 @@ const _Chat_Navbar = styled.div`
 export default function Chat_Navbar() {
   return (
     <_Chat_Navbar>
-      <span>agent-gpt</span>
+      <span>browser-gpt</span>
       <svg
         xmlns='http://www.w3.org/2000/svg'
         width='16'
