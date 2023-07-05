@@ -10,7 +10,7 @@ import {CallbackManager} from 'langchain/callbacks';
 import {WebBrowser} from 'langchain/tools/webbrowser';
 
 export default function useAgent({onComplete}) {
-  if (!process.env.OPENAI_API_KEY) return;
+  
   const [messages, setMessages] = useState([]);
   const [_memory, setMemory] = useState([]);
 
@@ -38,6 +38,7 @@ export default function useAgent({onComplete}) {
     }),
   });
   // OpenAI Embedding
+  if (!process.env.OPENAI_API_KEY) return;
   const embeddings = new OpenAIEmbeddings({
     openAIApiKey: process.env.OPENAI_API_KEY,
   });
@@ -53,7 +54,7 @@ export default function useAgent({onComplete}) {
 
   const invoke = async (text_input) => {
     // Format the chatbot's response
-    const formattedResponse = text_input; //formatResponse();
+    const formattedResponse = formatResponse(text_input);
     // Save user message to memory
     setMemory((prevMemory) => {
       let msg = new HumanChatMessage(formattedResponse);
@@ -98,7 +99,7 @@ export default function useAgent({onComplete}) {
 
       await executor
         .call({
-          input: formattedResponse,
+          input: text_input,
         })
         .then(async (response) => {
           const data = await response['output'];

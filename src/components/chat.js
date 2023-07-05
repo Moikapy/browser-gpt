@@ -4,13 +4,13 @@ import Container from './container';
 import Chat_Navbar from './chat_navbar';
 import Chat_Message_Log from './chat_message_log';
 import Chat_Message_Form from './chat_message_form';
-import useAgent from '@/useAgent';
+import useAgent from '@/hooks/useAgent';
 const Chat = () => {
-  // const {messages, invoke} = useAgent({
-  //   onComplete: (data) => {
-  //     console.log('onComplete', data);
-  //   }
-  // });
+  const {messages, invoke} = useAgent({
+    onComplete: (data) => {
+      console.log('onComplete', data);
+    }
+  });
   const [tab_link, setTabLink] = useState('');
   const [text_input, setTextInput] = useState('');
   const [tokens_used, setTokensUsed] = useState(0);
@@ -50,14 +50,13 @@ const Chat = () => {
         }
       `}</style>
       <Chat_Navbar />
-      <Chat_Message_Log messges={[]} />
+      <Chat_Message_Log messges={messages} />
       <Chat_Message_Form
         defaultValue={text_input}
         loading={isLoaded}
-        onSubmit={(e) => {}}
+        onSubmit={invoke}
         onChange={(e) => setTextInput(e.target.value)}
       />
-      
     </Container>
   );
 };
