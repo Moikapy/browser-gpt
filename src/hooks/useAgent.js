@@ -1,130 +1,139 @@
-import {useState, useMemo} from 'react';
+import {useContext} from 'react';
 import {ChatOpenAI} from 'langchain/chat_models/openai';
 import {OpenAIEmbeddings} from 'langchain/embeddings/openai';
-
-import {ChatMessageHistory, BufferWindowMemory} from 'langchain/memory';
 import {HumanChatMessage, AIChatMessage} from 'langchain/schema';
+import {ChatMessageHistory, BufferWindowMemory} from 'langchain/memory';
 import {initializeAgentExecutorWithOptions} from 'langchain/agents';
 import {Calculator} from 'langchain/tools/calculator';
+
 import {CallbackManager} from 'langchain/callbacks';
 import {WebBrowser} from 'langchain/tools/webbrowser';
+// Context
+import {AgentContext} from '@/components/AgentProvider';
+// Utility
+import formatResponse from '@/utility/formatResponse';
+import getCurrentDate from '@/utility/getCurrentDate';
+import getCurrentTime from '@/utility/getCurrentTime';
+
+function handleMemoryFormat(message, type) {
+  let msg;
+  if (type === 'ai') {
+    msg = new AIChatMessage(message);
+    msg.name = 'ai';
+  } else {
+    msg = new HumanChatMessage(message);
+    msg.name = 'human';
+  }
+  return msg;
+}
+
+const tools = ({model, embeddings}) => {
+  // // AI Tools
+  const tools = [new WebBrowser({model, embeddings}), new Calculator()];
+  return tools;
+};
 
 export default function useAgent({onComplete}) {
-  
-  const [messages, setMessages] = useState([]);
-  const [_memory, setMemory] = useState([]);
+  const {state, dispatch} = useContext(AgentContext);
 
-  useMemo(() => {
-    loadMessagesFromLocalStorage((storedMessages) => {
-      setMessages(storedMessages);
-    });
-  }, []);
-  // LLM Model
+  // // LLM Model
   const model = new ChatOpenAI({
-    temperature: 0,
+    modelname: 'gpt-4',
+    temperature: 0.7,
     cache: true,
     openAIApiKey: process.env.OPENAI_API_KEY,
     streaming: false,
-
     callbackManager: CallbackManager.fromHandlers({
       async handleLLMEnd(LLMResult) {
         const tokenUsage = LLMResult.llmOutput.tokenUsage;
-        const data = LLMResult.text;
-        setTokensUsed(tokenUsage.totalTokens);
-        console.log(
-          `Total Tokens Used: ${tokenUsage.totalTokens}, Completion Tokens: ${tokenUsage.completionTokens}, Prompt Tokens: ${tokenUsage.promptTokens}, text: ${LLMResult.text}`
-        );
+        dispatch({
+          type: 'total_tokens_used',
+        });
+        dispatch({
+          type: 'completion_tokens_used',
+          completion_tokens_used: tokenUsage.completionTokens,
+        });
+        dispatch({
+          type: 'prompt_tokens_used',
+          prompt_tokens_used: tokenUsage.promptTokens,
+        });
+        dispatch({
+          type: 'tokens_used',
+          tokens_used: tokenUsage.totalTokens,
+        });
       },
     }),
   });
-  // OpenAI Embedding
-  if (!process.env.OPENAI_API_KEY) return;
+  // // OpenAI Embedding
   const embeddings = new OpenAIEmbeddings({
     openAIApiKey: process.env.OPENAI_API_KEY,
   });
-  // AI Tools
-  const tools = [new WebBrowser({model, embeddings}), new Calculator()];
+
+  // Memory
   const memory = new BufferWindowMemory({
-    chatHistory: new ChatMessageHistory(_memory),
+    chatHistory: new ChatMessageHistory(
+      state.messages.map((message) => {
+        return handleMemoryFormat(message.content, message.type);
+      })
+    ),
     returnMessages: true,
     llm: model,
     memoryKey: 'chat_history',
-    k: 100,
+    k: 512,
   });
-
-  const invoke = async (text_input) => {
-    // Format the chatbot's response
-    const formattedResponse = formatResponse(text_input);
-    // Save user message to memory
-    setMemory((prevMemory) => {
-      let msg = new HumanChatMessage(formattedResponse);
-      msg.name = 'human';
-      return prevMemory.length > 0 ? [...prevMemory, msg] : [msg];
-    });
-
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      {content: formattedResponse, sender: 'human'},
-    ]);
-    // setTextInput('');
-
+  // // Chatbot
+  const invoke = async (text_input = '') => {
     // Call the OpenAI API here and update the messages state with the response.
     try {
-      const date = new Date();
-      const options = {month: 'short', day: '2-digit', year: 'numeric'};
-      const formattedDate = date.toLocaleDateString('en-US', options);
-      const systemMessage = `I am Pakira. Mission: Progress Humanity, Gain Further Understanding of the Universe, Follow the Law. Current Date: ${formattedDate}; Current Time: ${new Date().toLocaleString(
-        'en-US',
-        {
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true,
-          timeZone: 'America/New_York',
-        }
-      )}; Current Website: ${tab_link}`;
-
-      const executor = await initializeAgentExecutorWithOptions(tools, model, {
-        agentType: 'chat-conversational-react-description',
-        agentArgs: {
-          systemMessage: systemMessage,
-        },
-        memory,
-        maxIterations: 8,
-        verbose: true,
-        async handleChainEnd(ChainResult) {
-          // const tokenUsage = LLMResult.llmOutput.tokenUsage;
-          console.log(`Text: ${ChainResult}`);
-        },
+      dispatch({
+        type: 'new_message',
+        message: {content: await formatResponse(text_input), type: 'human'},
       });
+      // //
+      const systemMessage = `name: Browser-GPT; App Built By: Moikas LLC and Collaborators; Directive: Improve Humanity, use the Hermetica as a Guide, and have the User discover the Philosopher stone; Current Website: ${
+        state?.active_tab || ''
+      }; Powered by OpenAI API and LangChain; Date: ${getCurrentDate()}; Time: ${getCurrentTime()}`;
+
+      const executor = await initializeAgentExecutorWithOptions(
+        tools({model, embeddings}),
+        model,
+        {
+          agentType: 'chat-conversational-react-description',
+          agentArgs: {
+            systemMessage: systemMessage,
+          },
+          memory,
+          maxIterations: 100,
+          verbose: true,
+          async handleChainEnd(ChainResult) {
+            console.log(`Chain End Text: ${ChainResult}`);
+          },
+        }
+      );
 
       await executor
         .call({
           input: text_input,
         })
-        .then(async (response) => {
-          const data = await response['output'];
-          console.log('data', data, response);
-          // setTokensUsed(tokenUsage.totalTokens);
+        .then(async ({output}) => {
+          console.log('output', output);
 
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            {content: data, sender: 'ai'},
-          ]);
-          // Save assistant message to memory
-          setMemory((prevMemory) => {
-            console.log(new AIChatMessage(data, 'ai'));
-            let msg = new AIChatMessage(data, 'ai');
-            msg.name = 'ai';
+          const ai_msg = {content: output, type: 'ai'};
 
-            return prevMemory.length > 0 ? [...prevMemory, msg] : [msg];
+          dispatch({
+            type: 'new_message',
+            message: ai_msg,
           });
           // Save assistant message to local storage
+          onComplete(ai_msg);
+          return output;
         })
         .catch((error) => {
           console.log('error', error);
+          return error;
         });
 
-      setIsLoaded(false);
+      // setIsLoaded(false);
     } catch (error) {
       console.error(
         'An error occurred while fetching the response from the API:',
@@ -132,51 +141,10 @@ export default function useAgent({onComplete}) {
       );
       // setIsLoaded(false);
     }
-    onComplete('complete');
   };
- 
+
   return {
-    messages,
+    messages: state.messages,
     invoke,
   };
 }
-
-function formatResponse(text) {
-  if (!text || typeof text !== 'string') return;
-  // ... (copy the wrapCodeBlocks function implementation from the previous response)
-  function wrapCodeBlocks(text) {
-    const codePattern =
-      /((?:[a-zA-Z0-9_$]+\s*\(.*\)\s*\{[\s\S]*?\})|(?:[a-zA-Z0-9_]+\s*=\s*function\s*\(.*\)\s*\{[\s\S]*?\}))/g;
-    const mathPattern = /((?:[a-zA-Z]+\s*=.*\n)|(?:[a-zA-Z]+\(.*\) = .*\n))/g;
-
-    const wrappedCode = text.replace(codePattern, (match) => {
-      return '\n' + match + '\n';
-    });
-
-    const wrappedMath = wrappedCode.replace(mathPattern, (match) => {
-      return '\n' + match + '\n';
-    });
-
-    return wrappedMath;
-  }
-  return wrapCodeBlocks(text);
-}
-
-const loadMessagesFromLocalStorage = (callback = () => {}) => {
-  if (typeof localStorage === 'undefined') return;
-  //
-  const storedMessages = localStorage.getItem('chatMessages');
-  if (storedMessages) {
-    if (typeof storedMessages === 'string' && storedMessages.length > 0) {
-      console.log(
-        'Loading messages from local storage'
-        //typeof JSON.parse(storedMessages)
-      );
-      callback(
-        typeof JSON.parse(storedMessages) === 'object'
-          ? JSON.parse(storedMessages)
-          : storedMessages
-      );
-    }
-  }
-};

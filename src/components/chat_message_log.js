@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import ReactMarkdown from 'react-markdown';
-import {useRef, useMemo} from 'react';
+import {useRef, useEffect} from 'react';
 const _Chat_Message_Log = styled.div`
   flex-grow: 1;
   overflow-y: auto;
@@ -14,12 +14,10 @@ const _Chat_Message_Log = styled.div`
 `;
 export default function Chat_Message_Log({messages = []}) {
   const chatLogRef = useRef(null);
-  useMemo(() => {
-    if (typeof localStorage === 'undefined') return;
+  useEffect(() => {
     if (chatLogRef && chatLogRef.current) {
       chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
     }
-    localStorage.setItem('chatMessages', JSON.stringify(messages));
   }, [messages]);
   return (
     <_Chat_Message_Log ref={chatLogRef}>
@@ -69,8 +67,8 @@ export default function Chat_Message_Log({messages = []}) {
         }
       `}</style>
       {messages.map((message, index) => (
-        <div className={`message ${message.sender}`}>
-          {message.sender == 'ai' && (
+        <div key={index} className={`message ${message.type}`}>
+          {message.type == 'ai' && (
             <div className='icon'>
               <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
                 <rect width='100' height='100' fill='#ccc' />

@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "browser-gpt",
+  "version": "0.1.0",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "description": "Digital Assistance powered by Langchain",
+  "permissions": [
+    "activeTab",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ]
+}

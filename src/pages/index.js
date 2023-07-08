@@ -1,5 +1,10 @@
+import AgentProvider from '@/components/AgentProvider';
 import Chat from '@/components/chat';
 
 export default function Home() {
-  return <Chat />;
+  return (
+    <AgentProvider>
+      <Chat />
+    </AgentProvider>
+  );
 }
