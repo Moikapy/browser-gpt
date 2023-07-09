@@ -8,6 +8,7 @@ import {Calculator} from 'langchain/tools/calculator';
 
 import {CallbackManager} from 'langchain/callbacks';
 import {WebBrowser} from 'langchain/tools/webbrowser';
+
 // Context
 import {AgentContext} from '@/components/AgentProvider';
 // Utility
@@ -47,9 +48,6 @@ export default function useAgent({onComplete}) {
       async handleLLMEnd(LLMResult) {
         const tokenUsage = LLMResult.llmOutput.tokenUsage;
         dispatch({
-          type: 'total_tokens_used',
-        });
-        dispatch({
           type: 'completion_tokens_used',
           completion_tokens_used: tokenUsage.completionTokens,
         });
@@ -60,6 +58,9 @@ export default function useAgent({onComplete}) {
         dispatch({
           type: 'tokens_used',
           tokens_used: tokenUsage.totalTokens,
+        });
+        dispatch({
+          type: 'total_tokens_used',
         });
       },
     }),
@@ -124,8 +125,6 @@ export default function useAgent({onComplete}) {
             type: 'new_message',
             message: ai_msg,
           });
-          // Save assistant message to local storage
-          onComplete(ai_msg);
           return output;
         })
         .catch((error) => {
@@ -134,6 +133,8 @@ export default function useAgent({onComplete}) {
         });
 
       // setIsLoaded(false);
+      // Save assistant message to local storage
+      onComplete(state.messages);
     } catch (error) {
       console.error(
         'An error occurred while fetching the response from the API:',
