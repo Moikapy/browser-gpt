@@ -2,6 +2,9 @@
 
 > A AI Agent for your Browser
 
+[Part One](https://blog.moikaslookout.com/p/lets-build-ai-agent-browser-part-1)
+[Part Two](https://blog.moikaslookout.com/p/mastering-browser-agent-development-part-2-advanced-functionality-state-management)
+
 ## Getting Started
 
 ### Install the dependencies
