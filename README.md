@@ -25,6 +25,12 @@ yarn dev
 pnpm dev
 ```
 
+### Create a .env
+```
+OPENAI_API_KEY=ADD_YOUR_API_KEY_HERE
+
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ### Develop as Extension
