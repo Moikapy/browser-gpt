@@ -9,7 +9,7 @@ const _Chat_Message_Log = styled.div`
   margin: 0 3px;
   display: flex;
   flex-direction: column;
-  background-color: #eee;
+  background-color: rgb(16, 16, 16);
   height: calc(100% - 200px);
 `;
 export default function Chat_Message_Log({messages = []}) {
@@ -33,6 +33,8 @@ export default function Chat_Message_Log({messages = []}) {
           display: flex;
           flex-direction: row;
           word-break: break-word;
+          color: #fff;
+          font-size: 1rem;
         }
 
         .message.ai {
@@ -41,12 +43,13 @@ export default function Chat_Message_Log({messages = []}) {
 
         .message.human {
           align-self: flex-end;
-          background-color: #e0e0e0;
+          background-color: rgb(14, 14, 14);
           border-radius: 1rem;
           padding: 0.5rem 1rem;
           align-items: top;
           margin-bottom: 0.5rem;
           word-break: break-word;
+          border: 1px solid #fff;
         }
 
         .message img {
