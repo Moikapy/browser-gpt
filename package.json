@@ -53,9 +53,12 @@
     "prepare:win": "mv ./out/_next out/assets && sed -i 's/\\/_next/\\/assets/g' ./out/**.html",
     "prepare:mac": "mv ./out/_next out/assets && sed -i '' 's/\\/_next/\\/assets/g' ./out/*.html",
     "watch:mac": "npm-watch build_mac",
-    "watch:win": "npm-watch build_win"
+    "watch:win": "npm-watch build_win",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@types/styled-components": "^5.1.26",
     "autoprefixer": "10.4.14",
     "cheerio": "^1.0.0-rc.12",
     "eslint": "8.44.0",
@@ -70,5 +73,18 @@
     "react-markdown": "^8.0.7",
     "styled-components": "^6.0.2",
     "tailwindcss": "3.3.2"
+  },
+  "devDependencies": {
+    "@storybook/addon-essentials": "7.0.27",
+    "@storybook/addon-interactions": "7.0.27",
+    "@storybook/addon-links": "7.0.27",
+    "@storybook/blocks": "7.0.27",
+    "@storybook/nextjs": "7.0.27",
+    "@storybook/react": "7.0.27",
+    "@storybook/testing-library": "0.0.14-next.2",
+    "@types/chrome": "^0.0.241",
+    "eslint-plugin-storybook": "^0.6.12",
+    "storybook": "7.0.27",
+    "typescript": "5.1.6"
   }
 }

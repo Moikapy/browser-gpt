@@ -10,7 +10,7 @@ const _Chat_Message_Log = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #eee;
-  height: 100%;
+  height: calc(100% - 200px);
 `;
 export default function Chat_Message_Log({messages = []}) {
   const chatLogRef = useRef(null);

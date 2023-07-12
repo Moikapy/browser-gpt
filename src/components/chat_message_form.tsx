@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Chat_Message_Textarea from './chat_message_textarea';
+import Textarea from './common/textarea';
 const _Chat_Message_Form = styled.form`
   display: flex;
   flex-direction: column;
@@ -28,7 +28,7 @@ export default function Chat_Message_Form({
   return (
     <_Chat_Message_Form className='input-form' onSubmit={onSubmit}>
       {!loading ? (
-        <Chat_Message_Textarea
+        <Textarea
           value={defaultValue}
           onChange={onChange}
           onKeyDown={handleKeyDown}

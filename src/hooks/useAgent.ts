@@ -10,11 +10,11 @@ import {CallbackManager} from 'langchain/callbacks';
 import {WebBrowser} from 'langchain/tools/webbrowser';
 
 // Context
-import {AgentContext} from '@/components/AgentProvider';
+import {AgentContext} from '../components/AgentProvider';
 // Utility
-import formatResponse from '@/utility/formatResponse';
-import getCurrentDate from '@/utility/getCurrentDate';
-import getCurrentTime from '@/utility/getCurrentTime';
+import formatResponse from '../utility/formatResponse';
+import getCurrentDate from '../utility/getCurrentDate';
+import getCurrentTime from '../utility/getCurrentTime';
 
 function handleMemoryFormat(message, type) {
   let msg;
@@ -39,9 +39,8 @@ export default function useAgent({onComplete}) {
 
   // // LLM Model
   const model = new ChatOpenAI({
-    modelname: 'gpt-4',
+    modelName: 'gpt-4',
     temperature: 0.7,
-    cache: true,
     openAIApiKey: process.env.OPENAI_API_KEY,
     streaming: false,
     callbackManager: CallbackManager.fromHandlers({
@@ -78,7 +77,6 @@ export default function useAgent({onComplete}) {
       })
     ),
     returnMessages: true,
-    llm: model,
     memoryKey: 'chat_history',
     k: 512,
   });
@@ -106,9 +104,6 @@ export default function useAgent({onComplete}) {
           memory,
           maxIterations: 100,
           verbose: true,
-          async handleChainEnd(ChainResult) {
-            console.log(`Chain End Text: ${ChainResult}`);
-          },
         }
       );
 
