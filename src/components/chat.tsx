@@ -3,8 +3,9 @@ import {useState, useMemo, useReducer, useContext} from 'react';
 import Container from './container';
 import Chat_Navbar from './chat_navbar';
 import Chat_Message_Log from './chat_message_log';
-import Chat_Message_Form from './chat_message_form';
+import Form from './common/Form/';
 //
+import Textarea from './common/TextArea';
 import useAgent from '../hooks/useAgent';
 // Context
 import {AgentContext} from './AgentProvider';
@@ -36,23 +37,38 @@ const Chat = () => {
       });
     }
   }, [dispatch]);
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      setIsLoaded(true);
+      invoke(state.user_input);
+    }
+  };
   //
   return (
     <Container $flex>
       <Chat_Navbar />
       <Chat_Message_Log messages={messages} />
-      <Chat_Message_Form
-        defaultValue={state.user_input}
-        loading={isLoaded}
+      <Form
+        className='input-form'
         onSubmit={(e) => {
           e.preventDefault();
           setIsLoaded(true);
           invoke(state.user_input);
-        }}
-        onChange={(e) =>
-          dispatch({type: 'user_input', user_input: e.target.value})
-        }
-      />
+        }}>
+        {!isLoaded ? (
+          <Textarea
+            value={state.user_input}
+            onChange={(e) =>
+              dispatch({type: 'user_input', user_input: e.target.value})
+            }
+            onKeyDown={handleKeyDown}
+            placeholder='Type your message and press enter...'
+          />
+        ) : (
+          <span>Processing...</span>
+        )}
+      </Form>
     </Container>
   );
 };
