@@ -55,8 +55,12 @@
     "watch:mac": "npm-watch build_mac",
     "watch:win": "npm-watch build_win",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test-storybook": "test-storybook"
   },
+    "pre-commit": [
+      "test-storybook"
+    ],
   "dependencies": {
     "@types/styled-components": "^5.1.26",
     "autoprefixer": "10.4.14",
@@ -68,6 +72,7 @@
     "next": "13.4.7",
     "npm-watch": "^0.11.0",
     "postcss": "8.4.24",
+    "pre-commit": "^1.2.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-markdown": "^8.0.7",
@@ -81,6 +86,7 @@
     "@storybook/blocks": "7.0.27",
     "@storybook/nextjs": "7.0.27",
     "@storybook/react": "7.0.27",
+    "@storybook/test-runner": "^0.11.0",
     "@storybook/testing-library": "0.0.14-next.2",
     "@types/chrome": "^0.0.241",
     "eslint-plugin-storybook": "^0.6.12",
