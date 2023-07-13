@@ -13,8 +13,22 @@ const GlobalStyle = createGlobalStyle`
           font-family: 'Noto Serif', serif;
           overflow: hidden;
         }
+        ::-webkit-scrollbar {
+          display: block;
+          width: 0.25rem;
+        }
+        ::-webkit-scrollbar-track {
+          diplsay: none;
+        }
+        ::-webkit-scrollbar-thumb {
+          background-color: #fff;
+          border-radius: 1rem;
+        }
         p {
           margin: 0 !important;
+        }
+        a{
+          color: lightblue;
         }
       `;
 export default GlobalStyle;
