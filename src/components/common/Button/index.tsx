@@ -1,5 +1,12 @@
 import styled from 'styled-components';
-const Wrapper = styled.button`
+function Button({children, ...props}) {
+  return (
+    <button onClick={props.onClick} className={props.className || ''}>
+      {children || props.label}
+    </button>
+  );
+}
+export default styled(Button)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,10 +17,3 @@ const Wrapper = styled.button`
   padding: 0.25rem 0.5rem;
   cursor: pointer;
 `;
-export default function Button({children, ...props}) {
-  return (
-    <Wrapper className={props.className || ''}>
-      {children || props.label}
-    </Wrapper>
-  );
-}
