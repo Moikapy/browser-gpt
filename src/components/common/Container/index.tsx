@@ -5,7 +5,8 @@ const Container = styled.div<{$flex?: boolean}>`
   height: 100%;
   margin: 0;
   background-color: rgb(16, 16, 16);
-  padding-bottom: 0.5rem;
+  padding: 0.5rem;
   overflow-x: hidden;
+  color: #fff;
 `;
 export default Container;
