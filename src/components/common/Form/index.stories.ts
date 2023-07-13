@@ -3,7 +3,6 @@
 import type {Meta, StoryObj} from '@storybook/react';
 
 import Form from './';
-import Textarea from '../TextArea';
 const meta: Meta<typeof Form> = {
   component: Form,
 };
@@ -20,5 +19,6 @@ export const Default: Story = {
   args: {
     className: 'input-form',
     onSubmit: (e) => {alert('Form Submitted')},
+    children: 'Form',
   },
 };
