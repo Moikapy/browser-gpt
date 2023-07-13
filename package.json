@@ -61,7 +61,8 @@
   },
   "pre-commit": [
     "test-storybook",
-    "test"
+    "test",
+    "build-storybook"
   ],
   "dependencies": {
     "@types/styled-components": "^5.1.26",
