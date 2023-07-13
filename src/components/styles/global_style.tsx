@@ -13,5 +13,8 @@ const GlobalStyle = createGlobalStyle`
           font-family: 'Noto Serif', serif;
           overflow: hidden;
         }
+        p {
+          margin: 0 !important;
+        }
       `;
 export default GlobalStyle;
