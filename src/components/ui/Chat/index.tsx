@@ -1,14 +1,12 @@
 import {useState, useMemo, useReducer, useContext} from 'react';
-//Our components
-import Container from './container';
-import Chat_Navbar from './chat_navbar';
-import Chat_Message_Log from './chat_message_log';
-import Form from './common/Form/';
+import Chat_Message_Log from '../../chat_message_log';
+import Form from '../../common/Form';
+import Divider from '../../common/Divider';
+import Textarea from '../../common/TextArea';
 //
-import Textarea from './common/TextArea';
-import useAgent from '../hooks/useAgent';
+import useAgent from '../../../hooks/useAgent';
 // Context
-import {AgentContext} from './AgentProvider';
+import {AgentContext} from '../../AgentProvider';
 
 const Chat = () => {
   const {state, dispatch} = useContext(AgentContext);
@@ -46,9 +44,10 @@ const Chat = () => {
   };
   //
   return (
-    <Container $flex>
-      <Chat_Navbar />
+    <>
+      <Divider />
       <Chat_Message_Log messages={messages} />
+      <Divider />
       <Form
         className='input-form'
         onSubmit={(e) => {
@@ -69,7 +68,7 @@ const Chat = () => {
           <span>Processing...</span>
         )}
       </Form>
-    </Container>
+    </>
   );
 };
 
