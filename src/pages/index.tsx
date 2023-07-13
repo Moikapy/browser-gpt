@@ -6,7 +6,7 @@ import Chat_Navbar from '../components/chat_navbar';
 import Container from '../components/common/Container';
 import GlobalStyle from '../components/styles/global_style';
 
-export default function Index() {
+export default function Page() {
   const [isSettings, setIsSettings] = useState(false);
   return (
     <AgentProvider>
@@ -18,7 +18,6 @@ export default function Index() {
         />
         {!isSettings ? <Chat /> : <Settings />}
       </Container>
-<
       <GlobalStyle />
     </AgentProvider>
   );
