@@ -57,12 +57,13 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test-storybook": "test-storybook --coverage",
-    "test": "storybook.test.js"
+    "test": "storybook.test.js",
+    "lint": "next lint"
   },
   "pre-commit": [
+    "lint",
     "test-storybook",
-    "test",
-    "build-storybook"
+    "test"
   ],
   "dependencies": {
     "@types/styled-components": "^5.1.26",
