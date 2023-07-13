@@ -1,8 +1,21 @@
+import {MouseEventHandler, ReactNode} from 'react';
 import styled from 'styled-components';
-function Button({children, ...props}) {
+function Button({
+  children,
+  label,
+  onClick = () => {},
+  className,
+  ...props
+}: {
+  children?: ReactNode;
+  label?: string;
+
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  className?: string;
+}) {
   return (
-    <button onClick={props.onClick} className={props.className || ''}>
-      {children || props.label}
+    <button onClick={onClick} className={className || ''}>
+      {children || label}
     </button>
   );
 }

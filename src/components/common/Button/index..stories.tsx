@@ -16,6 +16,7 @@ type Story = StoryObj<typeof Button>;
 //  * to learn how to use render functions.
 //  */
 export const Default: Story = {
+  tags: ['autodocs'],
   args: {
     label: 'Button',
   },
