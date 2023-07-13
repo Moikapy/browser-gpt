@@ -56,7 +56,7 @@
     "watch:win": "npm-watch build_win",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test-storybook": "test-storybook --coverage",
+    "test-storybook": "test-storybook --coverage --browsers firefox chromium webkit",
     "test": "storybook.test.js",
     "lint": "next lint"
   },
