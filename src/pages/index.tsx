@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import AgentProvider from '../components/AgentProvider';
-import Chat from '../components/ui/chat';
+import Chat from '../components/ui/Chat';
 import Settings from '../components/ui/settings';
 import Chat_Navbar from '../components/chat_navbar';
 import Container from '../components/common/Container';
