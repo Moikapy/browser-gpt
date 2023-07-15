@@ -39,7 +39,7 @@ export default function useAgent({onComplete}) {
 
   // // LLM Model
   const model = new ChatOpenAI({
-    modelName: 'gpt-4',
+    modelName: state.model,
     temperature: 0.7,
     openAIApiKey: process.env.OPENAI_API_KEY,
     streaming: false,
