@@ -6,6 +6,7 @@ interface agent_state_type {
   completion_tokens_used: number;
   prompt_tokens_used: number;
   tokens_used: number;
+  model: string;
 }
 
 const agent_state = {
@@ -16,6 +17,7 @@ const agent_state = {
   completion_tokens_used: 0,
   prompt_tokens_used: 0,
   tokens_used: 0,
+  model: 'gpt-3.5-turbo-0613',
 } as agent_state_type;
 
 export default agent_state;
