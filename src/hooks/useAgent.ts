@@ -72,9 +72,14 @@ export default function useAgent({onComplete}) {
   // Memory
   const memory = new BufferWindowMemory({
     chatHistory: new ChatMessageHistory(
-      state.messages.map((message) => {
-        return handleMemoryFormat(message.content, message.type);
-      })
+      state.messages
+        .slice(
+          state.messages.length > 0 ? state.messages.length - 42 : 0,
+          state.messages.length < 42 ? state.messages.length : 42
+        )
+        .map((message) => {
+          return handleMemoryFormat(message.content, message.type);
+        })
     ),
     returnMessages: true,
     memoryKey: 'chat_history',
