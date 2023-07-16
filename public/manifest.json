@@ -5,12 +5,21 @@
   "action": {
     "default_popup": "index.html"
   },
+  "side_panel": {
+    "default_path": "index.html",
+    "open_icon": "icon.png",
+    "close_icon": "icon.png",
+    "always_on_top": true
+  },
   "description": "Digital Assistance powered by Langchain",
   "permissions": [
     "activeTab",
-    "tabs"
+    "tabs",
+    "sidePanel",
+    "webNavigation"
   ],
   "host_permissions": [
     "<all_urls>"
+    
   ]
 }
