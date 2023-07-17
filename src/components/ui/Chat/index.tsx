@@ -5,6 +5,7 @@ import Divider from '../../common/Divider';
 import Textarea from '../../common/TextArea';
 //
 import useAgent from '../../../hooks/useAgent';
+import { useCurrentTab } from '../../../hooks/useCurrentTab';
 // Context
 import {AgentContext} from '../../AgentProvider';
 
@@ -20,21 +21,13 @@ const Chat = () => {
     },
   });
 
-  async function getCurrentTabUrl() {
-    if (chrome && chrome.tabs) {
-      const tabs = await chrome?.tabs?.query({active: true});
-      return await tabs[0].url;
-    }
-  }
+  useCurrentTab({
+    onComplete: (url) => {
+      console.log('url', url);
+      dispatch({type: 'active_tab', active_tab: url});
+    },
+  });
 
-  useMemo(() => {
-    if (typeof chrome !== 'undefined') {
-      getCurrentTabUrl().then((url) => {
-        dispatch({type: 'active_tab', active_tab: url});
-        return url;
-      });
-    }
-  }, [dispatch]);
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
