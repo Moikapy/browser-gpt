@@ -94,9 +94,7 @@ export default function useAgent({onComplete}) {
         message: {content: await formatResponse(text_input), type: 'human'},
       });
       // //
-      const systemMessage = `name: Browser-GPT; App Built By: Moikas LLC and Collaborators; Directive: Improve Humanity, use the Hermetica as a Guide, and have the User discover the Philosopher stone; Current Website: ${
-        state?.active_tab || ''
-      }; Powered by OpenAI API and LangChain; Date: ${getCurrentDate()}; Time: ${getCurrentTime()}`;
+      const systemMessage = `name: Browser-GPT; App Built By: Moikas LLC and Collaborators; Directive: Improve Humanity, use the Hermetica as a Guide, and have the User discover the Philosopher stone; Powered by OpenAI API and LangChain; Date: ${getCurrentDate()}; Time: ${getCurrentTime()}; Answer all questions with a detailed response.`;
 
       const executor = await initializeAgentExecutorWithOptions(
         tools({model, embeddings}),
@@ -107,7 +105,7 @@ export default function useAgent({onComplete}) {
             systemMessage: systemMessage,
           },
           memory,
-          maxIterations: 100,
+          maxIterations: state.maxIterations,
           verbose: true,
         }
       );

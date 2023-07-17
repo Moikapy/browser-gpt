@@ -1,5 +1,5 @@
-import {useState, useMemo, useReducer, useContext} from 'react';
-import Chat_Message_Log from '../../chat_message_log';
+import {useState, useContext} from 'react';
+import Chat_Message_Log from '../Message_Log';
 import Form from '../../common/Form';
 import Divider from '../../common/Divider';
 import Textarea from '../../common/TextArea';
