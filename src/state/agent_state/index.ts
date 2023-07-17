@@ -18,6 +18,7 @@ const agent_state = {
   prompt_tokens_used: 0,
   tokens_used: 0,
   model: 'gpt-3.5-turbo-0613',
+  maxIterations: 8,
 } as agent_state_type;
 
 export default agent_state;
