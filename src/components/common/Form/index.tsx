@@ -6,8 +6,7 @@ const Form = styled.form`
   justify-content: center;
   align-items: center;
   padding: 0.75rem 1rem 1rem;
-  min-height: 4.6875rem;
   height: 100% !important;
-  max-height: 6.25rem !important;
+  max-height: 3rem !important;
 `;
 export default Form;

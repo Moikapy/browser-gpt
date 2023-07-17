@@ -1,15 +1,16 @@
 import styled from 'styled-components';
 import ReactMarkdown from 'react-markdown';
 import {useRef, useEffect} from 'react';
+import Divider from '../../common/Divider';
 const _Chat_Message_Log = styled.div`
   flex-grow: 1;
   overflow-y: auto;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  height: calc(100% - 200px);
+  height: calc(100% - 150px);
   margin: 0 auto 0;
-  padding: 0.5rem; 
+  padding: 0.5rem;
 `;
 //background-color: rgb(16, 16, 16);
 
@@ -30,13 +31,32 @@ const Container = styled.div`
 const Info = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 0.5rem;
+  width: 100%;
+  padding-bottom: 0.5rem;
+  border-bottom: 1.25px solid #000;
+`;
+
+const User = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const Time = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
 
 const Message = styled.div`
   word-break: break-word;
   width: 100%;
+  pre {
+    overflow: auto;
+  }
 `;
 
 export default function Chat_Message_Log({messages = []}) {
@@ -78,20 +98,28 @@ export default function Chat_Message_Log({messages = []}) {
       {messages.map((message, index) => (
         <Container key={index} className={`message ${message.type}`}>
           <Info>
-            <div className='icon me-3'>
-              <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
-                <rect width='100' height='100' fill={message.type == 'ai'?'#ccc':'#ggg'} />
-                <text
-                  x='50'
-                  y='65'
-                  font-size='50'
-                  fill='#fff'
-                  text-anchor='middle'></text>
-              </svg>
-            </div>
-            {message.type == 'ai' ? <p>AI</p> : <p>User</p>}
-          </Info>
+            <User>
+              <div className='icon me-3'>
+                <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+                  <rect
+                    width='100'
+                    height='100'
+                    fill={message.type == 'ai' ? '#ccc' : '#ggg'}
+                  />
+                  <text
+                    x='50'
+                    y='65'
+                    font-size='50'
+                    fill='#fff'
+                    text-anchor='middle'></text>
+                </svg>
+              </div>
 
+              {message.type == 'ai' ? <span>AI</span> : <span>User</span>}
+            </User>
+            <Time>{message.time || ''}</Time>
+          </Info>
+          <Divider />
           <Message className='chat-msg'>
             <ReactMarkdown>{message.content}</ReactMarkdown>
           </Message>

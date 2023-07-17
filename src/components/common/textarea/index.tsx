@@ -8,7 +8,7 @@ const Textarea = styled.textarea`
   resize: none;
   border: 1px solid #000;
   border-radius: 0.5rem;
-  min-width: 18rem;
+  min-width: 8rem;
   width: 100%;
   height: 4.6875rem;
   &:focus {

@@ -91,7 +91,7 @@ export default function useAgent({onComplete}) {
     try {
       dispatch({
         type: 'new_message',
-        message: {content: await formatResponse(text_input), type: 'human'},
+        message: {content: await formatResponse(text_input), type: 'human',time: getCurrentTime()},
       });
       // //
       const systemMessage = `name: Browser-GPT; App Built By: Moikas LLC and Collaborators; Directive: Improve Humanity, use the Hermetica as a Guide, and have the User discover the Philosopher stone; Powered by OpenAI API and LangChain; Date: ${getCurrentDate()}; Time: ${getCurrentTime()}; Answer all questions with a detailed response.`;
@@ -115,9 +115,7 @@ export default function useAgent({onComplete}) {
           input: text_input,
         })
         .then(async ({output}) => {
-          console.log('output', output);
-
-          const ai_msg = {content: output, type: 'ai'};
+          const ai_msg = {content: output, type: 'ai', time: getCurrentTime()};
 
           dispatch({
             type: 'new_message',
