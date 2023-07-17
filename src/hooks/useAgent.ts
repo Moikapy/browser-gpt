@@ -10,11 +10,11 @@ import {CallbackManager} from 'langchain/callbacks';
 import {WebBrowser} from 'langchain/tools/webbrowser';
 
 // Context
-import {AgentContext} from '@/components/AgentProvider';
+import {AgentContext} from '../components/AgentProvider';
 // Utility
-import formatResponse from '@/utility/formatResponse';
-import getCurrentDate from '@/utility/getCurrentDate';
-import getCurrentTime from '@/utility/getCurrentTime';
+import formatResponse from '../utility/formatResponse';
+import getCurrentDate from '../utility/getCurrentDate';
+import getCurrentTime from '../utility/getCurrentTime';
 
 function handleMemoryFormat(message, type) {
   let msg;
@@ -39,9 +39,8 @@ export default function useAgent({onComplete}) {
 
   // // LLM Model
   const model = new ChatOpenAI({
-    modelname: 'gpt-4',
+    modelName: state.model,
     temperature: 0.7,
-    cache: true,
     openAIApiKey: process.env.OPENAI_API_KEY,
     streaming: false,
     callbackManager: CallbackManager.fromHandlers({
@@ -73,12 +72,16 @@ export default function useAgent({onComplete}) {
   // Memory
   const memory = new BufferWindowMemory({
     chatHistory: new ChatMessageHistory(
-      state.messages.map((message) => {
-        return handleMemoryFormat(message.content, message.type);
-      })
+      state.messages
+        .slice(
+          state.messages.length > 0 ? state.messages.length - 42 : 0,
+          state.messages.length < 42 ? state.messages.length : 42
+        )
+        .map((message) => {
+          return handleMemoryFormat(message.content, message.type);
+        })
     ),
     returnMessages: true,
-    llm: model,
     memoryKey: 'chat_history',
     k: 512,
   });
@@ -91,9 +94,7 @@ export default function useAgent({onComplete}) {
         message: {content: await formatResponse(text_input), type: 'human'},
       });
       // //
-      const systemMessage = `name: Browser-GPT; App Built By: Moikas LLC and Collaborators; Directive: Improve Humanity, use the Hermetica as a Guide, and have the User discover the Philosopher stone; Current Website: ${
-        state?.active_tab || ''
-      }; Powered by OpenAI API and LangChain; Date: ${getCurrentDate()}; Time: ${getCurrentTime()}`;
+      const systemMessage = `name: Browser-GPT; App Built By: Moikas LLC and Collaborators; Directive: Improve Humanity, use the Hermetica as a Guide, and have the User discover the Philosopher stone; Powered by OpenAI API and LangChain; Date: ${getCurrentDate()}; Time: ${getCurrentTime()}; Answer all questions with a detailed response.`;
 
       const executor = await initializeAgentExecutorWithOptions(
         tools({model, embeddings}),
@@ -104,11 +105,8 @@ export default function useAgent({onComplete}) {
             systemMessage: systemMessage,
           },
           memory,
-          maxIterations: 100,
+          maxIterations: state.maxIterations,
           verbose: true,
-          async handleChainEnd(ChainResult) {
-            console.log(`Chain End Text: ${ChainResult}`);
-          },
         }
       );
 

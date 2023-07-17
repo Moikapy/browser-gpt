@@ -17,6 +17,10 @@ export default function agent_reducer(state, action) {
       return {...state, prompt_tokens_used: action.prompt_tokens_used};
     case 'tokens_used':
       return {...state, tokens_used: action.tokens_used};
+    case 'set_model':
+      return {...state, model: action.model};
+    case 'set_max_iterations':
+      return {...state, maxIterations: action.maxIterations};
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
